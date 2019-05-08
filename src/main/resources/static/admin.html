@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Example App</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.js" integrity="sha256-ufGElb3TnOtzl5E4c/qQnZFGP+FYEZj5kbSEdJNrw0A=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js" integrity="sha256-mpnrJ5DpEZZkwkE1ZgkEQQJW/46CSEh/STrZKOB/qoM=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.1/js/all.js" integrity="sha256-FfgLgtUyCun3AtxuU4iXuVNSbOzW6p1ozrdO0PlV6qA=" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.css" integrity="sha256-aan9tQnm7lVach/6JxYyrQRlheajRD+UBDwwWo3tAHQ=" crossorigin="anonymous" />
+
+    <link rel="stylesheet" type="text/css" href="index.css">
+</head>
+<body>
+
+<div id="app">
+
+    <section class="section">
+        <div class="container">
+
+            <div class="notification is-primary" v-if="message.length > 0">{{ message }}</div>
+
+            <div>
+                <h2 class="is-size-2">Reindex (# products)</h2>
+                <div class="field has-addons">
+                    <div class="control">
+                        <input type="number" min="0" max="1000000" class="input" v-model="numberOfProducts"/>
+                    </div>
+                    <div class="control">
+                        <button class="button is-warning" v-on:click="reindex">Reindex</button>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 3em">
+                <h2 class="is-size-2">Synonyms</h2>
+                <div class="control">
+                    <textarea class="textarea is-primary" v-model="synonyms"></textarea>
+                </div>
+                <div class="control">
+                    <button class="button is-warning is-medium" v-on:click="configure_synonyms">Configure Synonyms</button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</div>
+
+<script src="admin.js"></script>
+
+</body>
+</html>

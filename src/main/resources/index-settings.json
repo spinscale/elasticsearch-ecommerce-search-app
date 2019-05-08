@@ -1,0 +1,20 @@
+{
+  "index": {
+    "analysis": {
+      "analyzer": {
+        "my_synonym_analyzer": {
+          "tokenizer": "whitespace",
+          "filter": [
+            "my_synonym_filter"
+          ]
+        }
+      },
+      "filter": {
+        "my_synonym_filter": {
+          "type": "synonym_graph",
+          "synonyms": []
+        }
+      }
+    }
+  }
+}

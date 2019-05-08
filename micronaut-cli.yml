@@ -1,0 +1,5 @@
+profile: service
+defaultPackage: elasticsearch.ecommerce.app
+---
+testFramework: junit
+sourceLanguage: java

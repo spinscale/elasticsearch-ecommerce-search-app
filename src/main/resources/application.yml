@@ -1,0 +1,30 @@
+---
+micronaut:
+  application:
+    name: elasticsearch-ecommerce-search-app
+  router:
+    static-resources:
+      default:
+        enabled: true
+        mapping: /**
+        paths:
+#          - classpath:static
+          - file:src/main/resources/static
+
+---
+elasticsearch:
+  httpHosts: "http://localhost:9200"
+
+---
+# WARNING: MASSIVW SECURITY HOLE!
+endpoints:
+  all:
+    sensitive: false
+    enabled: true
+
+---
+jackson:
+  bean-introspection-module: true
+  serialization:
+    indentOutput: true
+    writeDatesAsTimestamps: false

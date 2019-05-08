@@ -1,0 +1,25 @@
+{
+  "dynamic_templates": [
+    {
+      "strings": {
+        "match_mapping_type": "string",
+        "mapping": {
+          "type": "text",
+          "analyzer": "standard",
+          "search_analyzer": "my_synonym_analyzer",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        }
+      }
+    }
+  ],
+  "properties" : {
+    "commission" : {
+      "type" : "rank_feature"
+    }
+  }
+}

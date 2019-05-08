@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Example App</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.js" integrity="sha256-ufGElb3TnOtzl5E4c/qQnZFGP+FYEZj5kbSEdJNrw0A=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js" integrity="sha256-mpnrJ5DpEZZkwkE1ZgkEQQJW/46CSEh/STrZKOB/qoM=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.1/js/all.js" integrity="sha256-FfgLgtUyCun3AtxuU4iXuVNSbOzW6p1ozrdO0PlV6qA=" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.css" integrity="sha256-aan9tQnm7lVach/6JxYyrQRlheajRD+UBDwwWo3tAHQ=" crossorigin="anonymous" />
+
+    <link rel="stylesheet" type="text/css" href="index.css">
+</head>
+<body>
+
+<div id="app">
+
+    <section class="section">
+        <div class="container">
+            <!-- the input bar at the top -->
+            <div class="searchInput field is-horizontal">
+                <div class="control" style="padding-right: 1em">
+                    <div class="select is-rounded">
+                        <select v-model="feature">
+                            <option value="products_only">Products</option>
+                            <option value="products_with_aggs">Products & Aggregations</option>
+                            <option value="products_with_filter_aggs">Products & Selectable Aggs</option>
+                            <option value="products_with_filtered_aggs">Products & Selectable filtered Aggs</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="field has-addons" style="padding-right: 1em">
+                    <div class="control">
+                        <input v-model="query" v-on:keyup.enter="search" class="input is-primary is-rounded"/>
+                    </div>
+                    <div class="control">
+                        <a class="button is-primary" v-on:click="search">Search!</a>
+                    </div>
+                </div>
+
+                <div class="field is-grouped is-grouped-multiline">
+                    <div v-for="(filter, index) in filters" class="control">
+                        <div class="tags has-addons">
+                            <a class="tag is-link is-primary">{{filter.key}}:{{filter.value}}</a>
+                            <a class="tag is-delete" v-on:click="filters.splice(index, 1)"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <template v-if="searchResponse">
+
+                <div class="columns">
+                    <template v-if="searchResponse.aggregations">
+                        <div class="column is-one-third aggregations">
+                            <div class="is-size-7 aggregation">
+                                <div class="is-size-5"><b>Color</b></div>
+                                <ul>
+                                    <template v-if="feature != 'products_with_aggs'">
+                                        <template v-if="searchResponse.aggregations.by_color.buckets != null">
+                                            <li v-for="bucket in searchResponse.aggregations.by_color.buckets">
+                                                <a v-on:click="filters.push({ 'key': 'color', 'value': bucket.key, 'type': 'term'})">{{ bucket.key }}</a> ({{ bucket.doc_count }})
+                                            </li>
+                                        </template>
+                                        <template v-else>
+                                            <li v-for="bucket in searchResponse.aggregations.by_color.by_color.buckets">
+                                                <a v-on:click="filters.push({ 'key': 'color', 'value': bucket.key, 'type': 'term'})">{{ bucket.key }}</a> ({{ bucket.doc_count }})
+                                            </li>
+                                        </template>
+                                    </template>
+                                    <template v-else>
+                                        <li v-for="bucket in searchResponse.aggregations.by_color.buckets">
+                                            {{ bucket.key }} ({{ bucket.doc_count }})
+                                        </li>
+                                    </template>
+                                </ul>
+                            </div>
+
+                            <div class="is-size-7 aggregation">
+                                <div class="is-size-5"><b>Brand</b></div>
+                                <ul>
+                                    <template v-if="feature != 'products_with_aggs'">
+                                        <template v-if="searchResponse.aggregations.by_brand.buckets != null">
+                                            <li v-for="bucket in searchResponse.aggregations.by_brand.buckets">
+                                                <a v-on:click="filters.push({ 'key': 'brand', 'value': bucket.key, 'type': 'term'})">{{ bucket.key }}</a> ({{ bucket.doc_count }})
+                                            </li>
+                                        </template>
+                                        <template v-else>
+                                            <li v-for="bucket in searchResponse.aggregations.by_brand.by_brand.buckets">
+                                                <a v-on:click="filters.push({ 'key': 'brand', 'value': bucket.key, 'type': 'term'})">{{ bucket.key }}</a> ({{ bucket.doc_count }})
+                                            </li>
+                                        </template>
+                                    </template>
+                                    <template v-else>
+                                        <li v-for="bucket in searchResponse.aggregations.by_brand.buckets">
+                                            {{ bucket.key }} ({{ bucket.doc_count }})
+                                        </li>
+                                    </template>
+                                </ul>
+                            </div>
+
+                            <div class="is-size-7 aggregation">
+                                <div class="is-size-5"><b>Material</b></div>
+                                <ul>
+                                    <template v-if="feature != 'products_with_aggs'">
+                                        <template v-if="searchResponse.aggregations.by_material.buckets != null">
+                                            <li v-for="bucket in searchResponse.aggregations.by_material.buckets">
+                                                <a v-on:click="filters.push({ 'key': 'material', 'value': bucket.key, 'type': 'term'})">{{ bucket.key }}</a> ({{ bucket.doc_count }})
+                                            </li>
+                                        </template>
+                                        <template v-else>
+                                            <li v-for="bucket in searchResponse.aggregations.by_material.by_material.buckets">
+                                                <a v-on:click="filters.push({ 'key': 'material', 'value': bucket.key, 'type': 'term'})">{{ bucket.key }}</a> ({{ bucket.doc_count }})
+                                            </li>
+                                        </template>
+                                    </template>
+                                    <template v-else>
+                                        <li v-for="bucket in searchResponse.aggregations.by_material.buckets">
+                                            {{ bucket.key }} ({{ bucket.doc_count }})
+                                        </li>
+                                    </template>
+                                </ul>
+                            </div>
+
+                            <div class="is-size-7 aggregation">
+                                <div class="is-size-5"><b>Stock</b></div>
+                                <div>
+                                    <p><span class="tag is-light">In stock: {{ searchResponse.aggregations.by_stock.buckets.in_stock.doc_count }} </span></p>
+                                    <p><span class="tag is-light">Out of stock: {{ searchResponse.aggregations.by_stock.buckets.not_in_stock.doc_count }} </span></p>
+                                </div>
+                                <button class="button is-primary" v-on:click="filters.push({ 'key': 'stock', 'value': '1-', 'type': 'range', 'from': 1 })">Filter In Stock!</button>
+                            </div>
+
+                            <div class="is-size-7 aggregation">
+                                <div class="is-size-5"><b>Price</b></div>
+                                <div class="control">
+                                    <div class="field">
+                                        <template v-if="searchResponse.aggregations.min_price.value != undefined">
+                                            <label class="label">From {{ searchResponse.aggregations.min_price.value | format }}</label>
+                                        </template>
+                                        <template v-if="searchResponse.aggregations.min_price.min_price != undefined">
+                                            <label class="label">From {{ searchResponse.aggregations.min_price.min_price.value | format }}</label>
+                                        </template>
+                                        <input v-model="price_from" v-on:change="add_price_filter" class="input is-primary is-rounded is-small" type="number" min="0" style="width: 10em">
+                                    </div>
+                                    <div class="field">
+                                        <template v-if="searchResponse.aggregations.max_price.value != undefined">
+                                            <label class="label">To {{ searchResponse.aggregations.max_price.value | format }}</label>
+                                        </template>
+                                        <template v-if="searchResponse.aggregations.max_price.max_price != undefined">
+                                            <label class="label">From {{ searchResponse.aggregations.max_price.max_price.value | format }}</label>
+                                        </template>
+                                        <input v-model="price_to" v-on:change="add_price_filter" class="input is-primary is-rounded is-small" type="number" min="0" style="width: 10em">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </template>
+
+                    <div class="column results">
+                        <template v-if="searchResponse.hits.total.value > 0">
+                            <h1>Results {{ searchResponse.hits.total.relation }} {{ searchResponse.hits.total.value }}</h1>
+                        </template>
+                        <template v-else>
+                            No Products found
+                        </template>
+
+                        <div class="columns is-multiline is-centered">
+                            <template v-if="searchResponse.hits.total.value > 0">
+                                <div v-for="(hit, index) of searchResponse.hits.hits" class="column is-one-quarter">
+                                <div class="card">
+                                    <span class="tag is-light">{{ index + 1 }}</span>
+                                    <div class="card-image has-text-centered">
+                                        <figure class="image is-128x128 is-inline-block">
+                                            <img class="is-rounded" v-bind:src="hit._source.productImageUrl" />
+                                        </figure>
+                                    </div>
+                                    <div class="card-content">
+                                        <div class="media">
+                                            <div class="media-left">
+                                                <figure class="image is-64x64">
+                                                    <img :src="hit._source.brandLogoUrl" alt="Placeholder image">
+                                                </figure>
+                                            </div>
+                                        </div>
+                                            <div class="media-content">
+                                                <p class="title is-6">{{ hit._source.name }}</p>
+                                                <p class="subtitle is-7"><a v-on:click="filters.push({ 'key': 'brand', 'value': hit._source.brand, 'type': 'term'})">by {{ hit._source.brand }}</a></p>
+                                                <p class="subtitle is-7"><b>{{ hit._source.price }} EUR</b></p>
+                                            </div>
+                                    </div>
+
+                                    <footer class="card-footer">
+                                        <template v-if="feature == 'products_with_filtered_aggs'">
+                                            <span class="tag is-rounded is-link" v-on:click="filters.push({ 'key': 'material', 'value': hit._source.material, 'type': 'term'})">{{ hit._source.material }}</span>
+                                            <span class="tag is-rounded is-link" v-on:click="filters.push({ 'key': 'color', 'value': hit._source.color, 'type': 'term'})">{{ hit._source.color }}</span>
+                                        </template>
+                                        <template v-else>
+                                            <ul>
+                                                <li>Material: {{ hit._source.material }}</li>
+                                                <li>Color: {{ hit._source.color }}</li>
+                                            </ul>
+                                        </template>
+                                    </footer>
+                                </div>
+                            </div>
+                            </template>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="columns">
+                    <div class="column is-4 is-offset-8">
+                    <nav class="pagination" role="navigation" aria-label="pagination">
+                        <a class="pagination-previous" v-on:click="from = Math.max(0, from - 16)">«</a>
+                        <a class="pagination-next" v-on:click="from = Math.min(10000, from + 16)">»</a>
+                        <ul class="pagination-list">
+                            <a class="pagination-link is-current" aria-label="Page 1" aria-current="page">{{ (from/16)+1 }}</a>
+                        </ul>
+                    </nav>
+                    </div>
+                </div>
+
+            </template>
+
+
+        </div>
+    </section>
+</div>
+
+<script src="index.js"></script>
+
+</body>
+</html>
