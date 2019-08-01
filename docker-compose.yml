@@ -2,7 +2,7 @@
 version: '3.6'
 services:
   elasticsearch_ecommerce_search_sample:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.2.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.3.0
     container_name: elasticsearch_ecommerce_search_sample
     ports: ['9200:9200']
     networks: ['stack']
@@ -22,7 +22,7 @@ services:
       - stack
 
   kibana_ecommerce_search_sample:
-    image: docker.elastic.co/kibana/kibana:7.2.0
+    image: docker.elastic.co/kibana/kibana:7.3.0
     container_name: kibana_ecommerce_search_sample
     ports: ['5601:5601']
     networks: ['stack']
