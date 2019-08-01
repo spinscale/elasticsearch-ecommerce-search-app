@@ -7,8 +7,6 @@ plugins {
     id "net.ltgt.apt-idea" version "0.21"
 }
 
-
-
 version "0.1"
 group "elasticsearch.ecommerce.app"
 
@@ -19,7 +17,7 @@ repositories {
 
 dependencyManagement {
     imports {
-        mavenBom 'io.micronaut:micronaut-bom:1.1.2'
+        mavenBom 'io.micronaut:micronaut-bom:1.1.4'
     }
 }
 
@@ -39,7 +37,7 @@ dependencies {
     compile "io.micronaut:micronaut-management"
     compile "javax.annotation:javax.annotation-api"
     compile 'com.github.javafaker:javafaker:0.17.2'
-    compile 'org.elasticsearch.client:elasticsearch-rest-high-level-client:7.0.0'
+    compile 'org.elasticsearch.client:elasticsearch-rest-high-level-client:7.2.0'
 
     runtime 'com.github.jknack:handlebars:4.1.0'
     runtime "ch.qos.logback:logback-classic:1.2.3"
