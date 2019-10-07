@@ -17,7 +17,7 @@ repositories {
 
 dependencyManagement {
     imports {
-        mavenBom 'io.micronaut:micronaut-bom:1.2.0.RC2'
+        mavenBom 'io.micronaut:micronaut-bom:1.2.3'
     }
 }
 
@@ -36,11 +36,11 @@ dependencies {
     compile "io.micronaut:micronaut-http-server-netty"
     compile "io.micronaut:micronaut-management"
     compile "javax.annotation:javax.annotation-api"
+
     compile 'com.github.javafaker:javafaker:0.17.2'
     compile 'org.elasticsearch.client:elasticsearch-rest-high-level-client:7.4.0'
+    compile "ch.qos.logback:logback-classic:1.2.3"
 
-    runtime 'com.github.jknack:handlebars:4.1.0'
-    runtime "ch.qos.logback:logback-classic:1.2.3"
     testAnnotationProcessor "io.micronaut:micronaut-inject-java"
     testCompile "org.junit.jupiter:junit-jupiter-api"
     testCompile "io.micronaut.test:micronaut-test-junit5"
