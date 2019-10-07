@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
 import elasticsearch.ecommerce.app.entities.Product;
 import io.micronaut.http.HttpStatus;
-import org.elasticsearch.action.admin.indices.close.CloseIndexRequest;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.admin.indices.open.OpenIndexRequest;
 import org.elasticsearch.action.admin.indices.settings.put.UpdateSettingsRequest;
@@ -14,6 +13,7 @@ import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.support.WriteRequest;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.indices.CloseIndexRequest;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.GetIndexRequest;
 import org.elasticsearch.common.io.Streams;
@@ -137,7 +137,7 @@ public class ProductIndexService {
     public CompletableFuture<HttpStatus> configureSynonyms(String synonyms) {
         return CompletableFuture.supplyAsync(() -> {
             try {
-                client.indices().close(new CloseIndexRequest().indices(INDEX), RequestOptions.DEFAULT);
+                client.indices().close(new CloseIndexRequest(INDEX), RequestOptions.DEFAULT);
                 Settings settings = Settings.builder()
                         .putList("index.analysis.filter.my_synonym_filter.synonyms", synonyms.split("\n"))
                         .build();
