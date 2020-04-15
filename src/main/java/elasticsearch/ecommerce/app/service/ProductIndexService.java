@@ -113,7 +113,7 @@ public class ProductIndexService {
                     int commission = faker.number().numberBetween(5, 20);
 
                     Product product = new Product(productName, price, color, material, id, productImage, brand, brandLogo, lastUpdated, remainingStock, commission);
-                    IndexRequest indexRequest = new IndexRequest(INDEX, "_doc", id);
+                    IndexRequest indexRequest = new IndexRequest(INDEX).id(id);
                     indexRequest.source(mapper.writeValueAsString(product), XContentType.JSON);
                     request.add(indexRequest);
 
