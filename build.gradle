@@ -38,7 +38,7 @@ dependencies {
     compile "javax.annotation:javax.annotation-api"
 
     compile 'com.github.javafaker:javafaker:1.0.2'
-    compile 'org.elasticsearch.client:elasticsearch-rest-high-level-client:7.6.2'
+    compile 'org.elasticsearch.client:elasticsearch-rest-high-level-client:7.8.0'
     compile "ch.qos.logback:logback-classic:1.2.3"
 
     testAnnotationProcessor "io.micronaut:micronaut-inject-java"
@@ -68,6 +68,6 @@ tasks.withType(JavaCompile){
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_14
+    targetCompatibility = JavaVersion.VERSION_14
 }
