@@ -7,7 +7,7 @@ services:
     ports: ['9200:9200']
     networks: ['stack']
     volumes:
-      - ./es_data:/usr/share/elasticsearch/data
+      - ./es_data:/var/lib/elasticsearch/data
     environment:
       - node.name=elasticsearch_ecommerce_01
       - cluster.initial_master_nodes=elasticsearch_ecommerce_01
